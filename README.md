@@ -84,14 +84,52 @@
     </div>
   </div>
 
-  <!-- ⭐⭐⭐⭐⭐ AQUI PEGAS TU CÓDIGO DEL CHAT + TU CONFIGURACIÓN DE FIREBASE ⭐⭐⭐⭐⭐ -->
   <script>
-    /* 
-      🔥 IMPORTANTE 🔥
-      Aquí debes pegar:
-      1. Tu firebaseConfig (lo que te dio Firebase)
-      2. El código del chat que te preparé
-    */
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBuruYnDWyG_7CDvs_nyfAD-iOkcaEwCaQ",
+  authDomain: "lilyholic.firebaseapp.com",
+  databaseURL: "https://lilyholic-default-rtdb.firebaseio.com",
+  projectId: "lilyholic",
+  storageBucket: "lilyholic.firebasestorage.app",
+  messagingSenderId: "68491199560",
+  appId: "1:68491199560:web:8dbf2ae48177e44d2f047d",
+  measurementId: "G-384DPKGE8F"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+    function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+  if (text === "") return;
+
+  db.ref("messages").push({ text });
+  input.value = "";
+}
+
+function addMessageToScreen(text) {
+  const messages = document.getElementById("messages");
+  const div = document.createElement("div");
+  div.className = "msg";
+  div.textContent = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+db.ref("messages").on("child_added", snapshot => {
+  addMessageToScreen(snapshot.val().text);
+});
+
   </script>
 
 </body>
