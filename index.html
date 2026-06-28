@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Lilyholic Chat</title>
+
+  <!-- Firebase SDK (versión compatible con tu proyecto) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
   <style>
     body {
       background: #111;
@@ -84,19 +89,18 @@
   </div>
 
   <script>
-    /* 🔥 PEGAR AQUÍ TU firebaseConfig 🔥 */
-
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_DOMINIO.firebaseapp.com",
-      databaseURL: "TU_DATABASE_URL",
-      projectId: "TU_PROJECT_ID",
-      storageBucket: "TU_BUCKET",
-      messagingSenderId: "TU_SENDER_ID",
-      appId: "TU_APP_ID"
+      apiKey: "AIzaSyBuruYnDWyG_7CDvs_nyfAD-iOkcaEwCaQ",
+      authDomain: "lilyholic.firebaseapp.com",
+      databaseURL: "https://lilyholic-default-rtdb.firebaseio.com",
+      projectId: "lilyholic",
+      storageBucket: "lilyholic.firebasestorage.app",
+      messagingSenderId: "68491199560",
+      appId: "1:68491199560:web:8dbf2ae48177e44d2f047d",
+      measurementId: "G-384DPKGE8F"
     };
 
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     function sendMessage() {
