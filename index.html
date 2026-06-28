@@ -83,14 +83,43 @@
     </div>
   </div>
 
-  <!-- ⭐⭐⭐⭐⭐ AQUI PEGAS TU CÓDIGO DEL CHAT + TU CONFIGURACIÓN DE FIREBASE ⭐⭐⭐⭐⭐ -->
   <script>
-    /* 
-      🔥 IMPORTANTE 🔥
-      Aquí debes pegar:
-      1. Tu firebaseConfig (lo que te dio Firebase)
-      2. El código del chat que te preparé
-    */
+    /* 🔥 PEGAR AQUÍ TU firebaseConfig 🔥 */
+
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_DOMINIO.firebaseapp.com",
+      databaseURL: "TU_DATABASE_URL",
+      projectId: "TU_PROJECT_ID",
+      storageBucket: "TU_BUCKET",
+      messagingSenderId: "TU_SENDER_ID",
+      appId: "TU_APP_ID"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function sendMessage() {
+      const input = document.getElementById("messageInput");
+      const text = input.value.trim();
+      if (text === "") return;
+
+      db.ref("messages").push({ text });
+      input.value = "";
+    }
+
+    function addMessageToScreen(text) {
+      const messages = document.getElementById("messages");
+      const div = document.createElement("div");
+      div.className = "msg";
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    db.ref("messages").on("child_added", snapshot => {
+      addMessageToScreen(snapshot.val().text);
+    });
   </script>
 
 </body>
