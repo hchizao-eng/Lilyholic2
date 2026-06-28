@@ -83,7 +83,7 @@
       <button onclick="sendMessage()">Enviar</button>
     </div>
   </div>
-
+  
   <script>
     // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -129,7 +129,6 @@ function addMessageToScreen(text) {
 db.ref("messages").on("child_added", snapshot => {
   addMessageToScreen(snapshot.val().text);
 });
-
   </script>
 
 </body>
