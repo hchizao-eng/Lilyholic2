@@ -4,9 +4,64 @@
   <meta charset="UTF-8">
   <title>Lilyholic Chat</title>
 
-  <!-- Firebase SDK (versión compatible con tu proyecto) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- Firebase SDK v9+ (modular) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBuruYnDWyG_7CDvs_nyfAD-iOkcaEwCaQ",
+      authDomain: "lilyholic.firebaseapp.com",
+      databaseURL: "https://lilyholic-default-rtdb.firebaseio.com",
+      projectId: "lilyholic",
+      storageBucket: "lilyholic.firebasestorage.app",
+      messagingSenderId: "68491199560",
+      appId: "1:68491199560:web:8dbf2ae48177e44d2f047d",
+      measurementId: "G-384DPKGE8F"
+    };
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      console.log("✅ Firebase inicializado correctamente");
+
+      window.sendMessage = function() {
+        const input = document.getElementById("messageInput");
+        const text = input.value.trim();
+        if (text === "") return;
+
+        push(ref(db, "messages"), { text, timestamp: new Date().getTime() })
+          .then(() => {
+            console.log("✅ Mensaje enviado");
+            input.value = "";
+          })
+          .catch(error => console.error("❌ Error al enviar:", error));
+      };
+
+      window.addMessageToScreen = function(text) {
+        const messages = document.getElementById("messages");
+        const div = document.createElement("div");
+        div.className = "msg";
+        div.textContent = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+      };
+
+      // Escuchar mensajes nuevos
+      onChildAdded(ref(db, "messages"), snapshot => {
+        const data = snapshot.val();
+        if (data && data.text) {
+          window.addMessageToScreen(data.text);
+          console.log("💬 Nuevo mensaje:", data.text);
+        }
+      }, error => {
+        console.error("❌ Error al cargar mensajes:", error);
+      });
+
+    } catch (error) {
+      console.error("❌ Error inicializando Firebase:", error);
+    }
+  </script>
 
   <style>
     body {
@@ -45,6 +100,7 @@
       padding: 8px;
       background: #333;
       border-radius: 5px;
+      word-wrap: break-word;
     }
 
     #input-area {
@@ -57,6 +113,7 @@
       padding: 10px;
       border-radius: 5px;
       border: none;
+      font-size: 16px;
     }
 
     button {
@@ -66,10 +123,15 @@
       border-radius: 5px;
       color: white;
       cursor: pointer;
+      font-size: 16px;
     }
 
     button:hover {
       background: #45a049;
+    }
+
+    button:active {
+      transform: scale(0.98);
     }
   </style>
 </head>
@@ -83,48 +145,10 @@
     <div id="messages"></div>
 
     <div id="input-area">
-      <input type="text" id="messageInput" placeholder="Escribe un mensaje...">
+      <input type="text" id="messageInput" placeholder="Escribe un mensaje..." autocomplete="off">
       <button onclick="sendMessage()">Enviar</button>
     </div>
   </div>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBuruYnDWyG_7CDvs_nyfAD-iOkcaEwCaQ",
-      authDomain: "lilyholic.firebaseapp.com",
-      databaseURL: "https://lilyholic-default-rtdb.firebaseio.com",
-      projectId: "lilyholic",
-      storageBucket: "lilyholic.firebasestorage.app",
-      messagingSenderId: "68491199560",
-      appId: "1:68491199560:web:8dbf2ae48177e44d2f047d",
-      measurementId: "G-384DPKGE8F"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function sendMessage() {
-      const input = document.getElementById("messageInput");
-      const text = input.value.trim();
-      if (text === "") return;
-
-      db.ref("messages").push({ text });
-      input.value = "";
-    }
-
-    function addMessageToScreen(text) {
-      const messages = document.getElementById("messages");
-      const div = document.createElement("div");
-      div.className = "msg";
-      div.textContent = text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    db.ref("messages").on("child_added", snapshot => {
-      addMessageToScreen(snapshot.val().text);
-    });
-  </script>
 
 </body>
 </html>
