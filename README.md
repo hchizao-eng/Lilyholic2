@@ -89,7 +89,6 @@
   </div>
 
   <script>
-    /* 🔥 Tu firebaseConfig adaptado a la versión compatible 🔥 */
     const firebaseConfig = {
       apiKey: "AIzaSyBuruYnDWyG_7CDvs_nyfAD-iOkcaEwCaQ",
       authDomain: "lilyholic.firebaseapp.com",
